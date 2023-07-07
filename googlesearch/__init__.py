@@ -66,14 +66,13 @@ def search(term, num_results=10, lang="en", proxy=None, advanced=False, sleep_in
             title = result.find("h3")
             description_box = result.find(
                 "div", {"style": "-webkit-line-clamp:2"})
-            if description_box:
-                description = description_box.text
-                if link and title and description:
-                    start += 1
-                    if advanced:
-                        yield SearchResult(link["href"], title.text, description)
-                    else:
-                        yield link["href"]
+            if link and title:
+                start += 1
+                if advanced:
+                    description = description_box.text if description_box else "No description available."
+                    yield SearchResult(link["href"], title.text, description)
+                else:
+                    yield link["href"]
         sleep(sleep_interval)
 
         if start == 0:
